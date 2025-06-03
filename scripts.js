@@ -90,3 +90,14 @@ function captureImage(color) {
   colorCtx.putImageData(imageData, 0, 0);
 
 }
+
+function downloadImage() {
+
+  const data = combinedImage.toDataURL("image/jpeg"),
+        link = document.createElement('a');
+  
+  link.href = data;
+  link.download = 'combinedImage.jpeg';
+  link.click();
+
+}
