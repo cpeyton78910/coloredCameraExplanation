@@ -65,8 +65,10 @@ h3 {
 }
 
 @media (max-width: 42rem) {
-  h1 {
+  .example h1 {
     padding-top: 1.5rem;
+  }
+  h1 {
     font-size: 1.5em;
   }
   h2 {
