@@ -18,9 +18,11 @@ function vColorFilter() {
   if (button.innerText === "Toggle Off vColor Filter") {
     button.innerText = "Toggle On vColor Filter";
     colorFilter = false;
+    webcam.style.filter = "grayscale(100%)";
   } else {
     button.innerText = "Toggle Off vColor Filter";
     colorFilter = true;
+    webcam.style.filter = "none";
   }
 }
 
