@@ -21,7 +21,20 @@ h3 {
   position: absolute;
   right: 1rem;
 }
-
+.webcamContainer {
+  width: 100%;
+  position: relative;
+  height: 2rem;
+}
+#toggleCameraButton {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: #555;
+  color: #fff;
+  border-radius: 0.5rem;
+  border: 1px solid #000;
+}
 #webcam, #finalImage {
   margin: 0;
   padding: 0;
