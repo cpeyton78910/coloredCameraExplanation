@@ -2,14 +2,47 @@ const webcam = document.getElementById('webcam'),
       combinedImage = document.getElementById('finalImage'),
       ctx = combinedImage.getContext('2d');
 
-if (navigator.mediaDevices.getUserMedia) {
-  navigator.mediaDevices.getUserMedia({ video: true })
-    .then(function (stream) {
-      webcam.srcObject = stream;
+let videoDevices = [];
+navigator.mediaDevices.enumerateDevices()
+  .then(devices => {
+    videoDevices = devices.filter(device => device.kind === 'videoinput');
+    if (videoDevices.length > 0) { toggleCamera(); }
+  })
+  .catch(error => {
+    console.error('Error accessing devices:', error);
+  });
+
+let deviceNumber = 0;
+
+function toggleCamera() {
+
+  if (webcam.srcObject) {
+    webcam.srcObject.getTracks().forEach(track => track.stop());
+  }
+
+  if (navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ 
+      video: { deviceId: videoDevices[deviceNumber].deviceId }
     })
-    .catch(function (err0r) {
-      console.log("Something went wrong!");
-    });
+      .then(function (stream) {
+        webcam.srcObject = stream;
+      })
+      .catch(function (err0r) {
+        console.log("Something went wrong!");
+      });
+  }
+
+  if (videoDevices.length <= 1) {
+    document.getElementById('toggleCameraButton').style.display = "none";
+  } else {
+    if (deviceNumber < videoDevices.length - 1) {
+      deviceNumber +=1;
+    } else {
+      deviceNumber = 0;
+    }
+
+  }
+
 }
 
 let colorFilter = true;
