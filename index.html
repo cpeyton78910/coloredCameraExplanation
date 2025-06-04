@@ -26,7 +26,10 @@
   <button id="options" onclick="vColorFilter()">Toggle Off vColor Filter</button>
   <div class="example">
     <h1>RGB Camera Example</h1>
-    <video autoplay="true" id="webcam"></video>
+    <span class="webcamContainer">
+      <video autoplay="true" id="webcam"></video>
+      <button onclick="toggleCamera()" id="toggleCameraButton">&#10227;</button>
+    </span>
 
     <div>
       <button onclick="captureImage('red')">Red Capture</button>
