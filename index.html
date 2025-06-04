@@ -11,16 +11,17 @@
     <h1>How a Black & White Camera Makes a Colored Image</h1>
 
     <h2>History</h2>
-    <p>All cameras are, in a way, black-and-white cameras; all cameras inherently use this trick. While color cameras do this automatically, the underlying principle is the same.</p>
-    <p>This process was first proposed by James Clerk Maxwell as early as 1855. His idea was to capture three images using an ordinary black and white camera, each with a red, green, or blue color filter over the lens, and then combine them to create a single-colored image.</p>
+    <p>All cameras, in a way, are black-and-white cameras; all cameras inherently use this trick. While color cameras do this automatically, the underlying principle is the same.</p>
+    <p>This process was first proposed by James Clerk Maxwell as early as 1855. His idea was to capture three images using an ordinary black-and-white camera, each with a red, green, or blue color filter over the lens, and then combine them to create a single-colored image.</p>
 
     <h2>How Modern Cameras Work</h2>
-    <p>Today, most cameras use digital sensors that mimic Maxwell’s idea. Instead of capturing color directly, they rely on filters where each pixel is covered by a tiny red, green, or blue filter (a Bayer filter). The sensor captures an image where each pixel records only one-color component. Finally, an algorithm combines the data to recreate the full-color image we see.</p>
+    <p>Today, most cameras use digital sensors that mimic Maxwell’s idea. Instead of capturing color directly, they rely on filters where each pixel is covered by a tiny red, green, or blue filter (a Bayer filter). The sensor captures an image where each pixel records only one color component. Finally, an algorithm combines the data to recreate the full-color image we see.</p>
     <p>Another popular system used in high-end or professional cameras is the 3CCD system. This system uses a prism to split incoming light into red, green, and blue components, directing each one to a separate black-and-white image sensor. Making for a highly color-accurate image.</p>
 
     <h2>How This Program Works</h2>
-    <p>This program is a representation of Maxwell's original idea. However, because you have access to a colored camera, all the filtering can be done in the camera (unless you use the button to turn this off). So, the program captures the three colored values individually and then combines them to create a colored image.</p>
-    <p>You can also use the button at the top, to turn off the "vColor Filter" and use your own physical color filters over your camera if you want a more authentic experience.</p>
+    <p>This program is a representation of Maxwell's original idea. However, because you have access to a colored camera, all the filtering can be done in the camera (unless you use the button to turn it off). So, the program captures the three colored values individually and then combines them to create a colored image.</p>
+    <p>You can also use the button at the top to turn off the "vColor Filter" and use physical color filters over your camera if you want a more authentic experience.</p>
+    <p>Side Note: The rotate camera button works by toggling through all cameras that show up on your device, and some devices might have the front camera showing up as two devices. You might also have access to more than one rear camera if your device has, for example, a wide-angle or telephoto camera.</p>
 
   </div>
   <button id="options" onclick="vColorFilter()">Toggle Off vColor Filter</button>
