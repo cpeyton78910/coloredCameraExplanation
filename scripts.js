@@ -2,6 +2,7 @@ const webcam = document.getElementById('webcam'),
       combinedImage = document.getElementById('finalImage'),
       ctx = combinedImage.getContext('2d'),
       zoomSlider = document.getElementById('zoomSlider'),
+      zoomNumber = document.getElementById('zoomNumber'),
       webcamContainer = document.getElementById('webcamContainer');
 let deviceNumber = 0,
     zoomValue = 1,
@@ -23,7 +24,8 @@ navigator.mediaDevices.enumerateDevices()
 window.addEventListener('resize', setZoom, true);
 function setZoom() {
 
-  zoomValue = zoomSlider.value;
+  zoomValue = Number(zoomSlider.value);
+  zoomNumber.innerText = `${zoomValue.toFixed(1)}x`;
   webcam.style.transform = `scale(${zoomValue})`;
 
   webcamContainer.style.width = `${webcam.clientWidth-1}px`;
@@ -31,7 +33,14 @@ function setZoom() {
 
 }
 
-// Handles initializing camera and handles toggling between cameras
+// Makes focus/blur work how I want
+zoomSlider.addEventListener('touchstart', () => zoomSlider.focus());
+zoomSlider.addEventListener('touchend', () => zoomSlider.blur());
+zoomSlider.addEventListener('mouseup', () => zoomSlider.blur());
+// Shows/hides Number based off focus/blur
+zoomSlider.addEventListener('focus', () => zoomNumber.style.display = "block");
+zoomSlider.addEventListener('blur', () => zoomNumber.style.display = "none");
+
 function toggleCamera() {
 
   zoomSlider.value = 1;
