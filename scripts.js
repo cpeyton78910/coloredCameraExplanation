@@ -9,7 +9,7 @@ let deviceNumber = 0,
     videoDevices = [],
     colorFilter = true,
     blank = true,
-    previousWidth;
+    previousWidth = 0;
 
 // Makes list of Camera Devices
 navigator.mediaDevices.enumerateDevices()
@@ -45,7 +45,7 @@ zoomSlider.addEventListener('blur', () => zoomNumber.style.display = "none");
 function toggleCamera() {
 
   zoomSlider.value = 1;
-  blank = true;
+  previousWidth = webcam.videoWidth;
   
   if (webcam.srcObject) {
     webcam.srcObject.getTracks().forEach(track => track.stop());
@@ -60,6 +60,7 @@ function toggleCamera() {
         webcam.addEventListener("loadedmetadata", () => {
           setZoom();
           if (previousWidth != webcam.videoWidth) {
+            blank = true;
             captureImage(null);
           }
         });
@@ -125,8 +126,6 @@ function captureImage(color) {
     }
 
   }
-
-  previousWidth = webcam.videoWidth;
 
   const colorCanvas = document.getElementById(`${color}Image`),
         colorCtx = colorCanvas.getContext('2d'),
