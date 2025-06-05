@@ -29,11 +29,12 @@
     <h1>RGB Camera Example</h1>
     <div id="webcamContainer">
       <video autoplay="true" id="webcam" disablePictureInPicture></video>
+      <div id="zoomNumber">1.0x</div>
       <button onclick="toggleCamera()" id="toggleCameraButton">&#10227;</button>
     </div>
 
     <div class="controls">
-      <input type="range" min="1" max="5" value="1" step=".01" oninput="setZoom()" id="zoomSlider">
+      <input type="range" min="1" max="5" value="1" step=".1" oninput="setZoom()" id="zoomSlider">
       <br>
       <button onclick="captureImage('red')">Red Capture</button>
       <button onclick="captureImage('green')">Green Capture</button>
