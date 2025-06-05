@@ -8,7 +8,8 @@ let deviceNumber = 0,
     zoomValue = 1,
     videoDevices = [],
     colorFilter = true,
-    blank = true;
+    blank = true,
+    previousWidth;
 
 // Makes list of Camera Devices
 navigator.mediaDevices.enumerateDevices()
@@ -114,12 +115,16 @@ function captureImage(color) {
     const combinedImageData = ctx.getImageData(0, 0, combinedImage.width, combinedImage.height);
     ctx.putImageData(combinedImageData, 0, 0);
 
-    for (let i=0; i < 3; i++) {
-      const currentImage = document.getElementsByClassName('uncombinedImage')[i];
-      currentImage.getContext('2d').clearRect(0, 0, webcam.videoWidth, webcam.videoHeight);
-      currentImage.height = webcam.videoHeight;
-      currentImage.width = webcam.videoWidth;
+    if (!previousWidth || previousWidth != webcam.videoWidth) {
+      for (let i=0; i < 3; i++) {
+        const currentImage = document.getElementsByClassName('uncombinedImage')[i];
+        currentImage.getContext('2d').clearRect(0, 0, webcam.videoWidth, webcam.videoHeight);
+        currentImage.height = webcam.videoHeight;
+        currentImage.width = webcam.videoWidth;
+      }
     }
+
+    previousWidth = webcam.videoWidth;
     
   }
 
