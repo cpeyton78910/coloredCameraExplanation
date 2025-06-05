@@ -100,7 +100,7 @@ function vColorFilter() {
 function captureImage(color) {
 
   // If the canvas is blank then initializes certain things
-  if (blank) {
+  if (blank && previousWidth != webcam.videoWidth) {
     combinedImage.width = webcam.videoWidth;
     combinedImage.height = webcam.videoHeight;
 
@@ -115,17 +115,15 @@ function captureImage(color) {
     const combinedImageData = ctx.getImageData(0, 0, combinedImage.width, combinedImage.height);
     ctx.putImageData(combinedImageData, 0, 0);
 
-    if (!previousWidth || previousWidth != webcam.videoWidth) {
-      for (let i=0; i < 3; i++) {
-        const currentImage = document.getElementsByClassName('uncombinedImage')[i];
-        currentImage.getContext('2d').clearRect(0, 0, webcam.videoWidth, webcam.videoHeight);
-        currentImage.height = webcam.videoHeight;
-        currentImage.width = webcam.videoWidth;
-      }
+    for (let i=0; i < 3; i++) {
+      const currentImage = document.getElementsByClassName('uncombinedImage')[i];
+      currentImage.getContext('2d').clearRect(0, 0, webcam.videoWidth, webcam.videoHeight);
+      currentImage.height = webcam.videoHeight;
+      currentImage.width = webcam.videoWidth;
     }
-
-    previousWidth = webcam.videoWidth;
     
+    previousWidth = webcam.videoWidth;
+
   }
 
   const colorCanvas = document.getElementById(`${color}Image`),
