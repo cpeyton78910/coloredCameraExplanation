@@ -1,8 +1,15 @@
 const webcam = document.getElementById('webcam'),
       combinedImage = document.getElementById('finalImage'),
-      ctx = combinedImage.getContext('2d');
+      ctx = combinedImage.getContext('2d'),
+      zoomSlider = document.getElementById('zoomSlider'),
+      webcamContainer = document.getElementById('webcamContainer');
+let deviceNumber = 0,
+    zoomValue = 1,
+    videoDevices = [],
+    colorFilter = true,
+    blank = true;
 
-let videoDevices = [];
+// Makes list of Camera Devices
 navigator.mediaDevices.enumerateDevices()
   .then(devices => {
     videoDevices = devices.filter(device => device.kind === 'videoinput');
@@ -12,10 +19,24 @@ navigator.mediaDevices.enumerateDevices()
     console.error('Error accessing devices:', error);
   });
 
-let deviceNumber = 0;
+// Handles Zooming
+window.addEventListener('resize', setZoom, true);
+function setZoom() {
 
+  zoomValue = zoomSlider.value;
+  webcam.style.transform = `scale(${zoomValue})`;
+
+  webcamContainer.style.width = `${webcam.clientWidth-1}px`;
+  webcamContainer.style.height = `${webcam.clientHeight-1}px`;
+
+}
+
+// Handles initializing camera and handles toggling between cameras
 function toggleCamera() {
 
+  zoomSlider.value = 1;
+  blank = true;
+  
   if (webcam.srcObject) {
     webcam.srcObject.getTracks().forEach(track => track.stop());
   }
@@ -26,6 +47,10 @@ function toggleCamera() {
     })
       .then(function (stream) {
         webcam.srcObject = stream;
+        webcam.addEventListener("loadedmetadata", () => {
+          setZoom();
+          captureImage(null);
+        });
       })
       .catch(function (err0r) {
         console.log("Something went wrong!");
@@ -45,8 +70,9 @@ function toggleCamera() {
 
 }
 
-let colorFilter = true;
+// Handles turning on/off the "vColor Filter"
 function vColorFilter() {
+
   const button = document.getElementById('options');
   if (button.innerText === "Toggle Off vColor Filter") {
     button.innerText = "Toggle On vColor Filter";
@@ -57,33 +83,68 @@ function vColorFilter() {
     colorFilter = true;
     webcam.style.filter = "none";
   }
+
 }
 
-let blank = true;
+// Produces Uncombined Images and Final Image
 function captureImage(color) {
+
+  // If the canvas is blank then initializes certain things
   if (blank) {
     combinedImage.width = webcam.videoWidth;
     combinedImage.height = webcam.videoHeight;
 
     ctx.fillRect(0, 0, combinedImage.width, combinedImage.height);
+
+    if (!color) {
+      ctx.clearRect(0, 0, combinedImage.width, combinedImage.height);
+    } else {
+      blank = false;
+    }
+
     const combinedImageData = ctx.getImageData(0, 0, combinedImage.width, combinedImage.height);
     ctx.putImageData(combinedImageData, 0, 0);
-    blank = false;
+
+    for (let i=0; i < 3; i++) {
+      const currentImage = document.getElementsByClassName('uncombinedImage')[i];
+      currentImage.getContext('2d').clearRect(0, 0, webcam.videoWidth, webcam.videoHeight);
+      currentImage.height = webcam.videoHeight;
+      currentImage.width = webcam.videoWidth;
+    }
+    
   }
 
-  const colorCanvas = document.getElementById(`${color}Image`);
-  const colorCtx = colorCanvas.getContext('2d');
+  const colorCanvas = document.getElementById(`${color}Image`),
+        colorCtx = colorCanvas.getContext('2d'),
+  // Calculates stuff for temporary canvas
+        cropWidth = webcam.videoWidth / zoomValue,
+        cropHeight = webcam.videoHeight / zoomValue,
+        cropX = (webcam.videoWidth - cropWidth) / 2,
+        cropY = (webcam.videoHeight - cropHeight) / 2;
 
+  // Create a temporary canvas for cropping
+  const tempCanvas = document.createElement("canvas"),
+        tempCtx = tempCanvas.getContext("2d");
+
+  tempCanvas.width = cropWidth;
+  tempCanvas.height = cropHeight;
+
+  // Draw the cropped portion onto the temporary canvas
+  tempCtx.drawImage(webcam, cropX, cropY, cropWidth, cropHeight, 0, 0, cropWidth, cropHeight);
+
+  // Resize the final canvas back to original dimensions
   colorCanvas.width = webcam.videoWidth;
   colorCanvas.height = webcam.videoHeight;
 
-  colorCtx.drawImage(webcam, 0 , 0, colorCanvas.width, colorCanvas.height);
+  // Draw the resized image onto the final canvas and sets up Canvases for next step
+  colorCtx.drawImage(tempCanvas, 0, 0, webcam.videoWidth, webcam.videoHeight);
 
-  const imageData = colorCtx.getImageData(0, 0, colorCanvas.width, colorCanvas.height);
-  const combinedImageData = ctx.getImageData(0, 0, combinedImage.width, combinedImage.height);
-  const colorPixels = imageData.data;
-  const pixels = combinedImageData.data;
+  const imageData = colorCtx.getImageData(0, 0, colorCanvas.width, colorCanvas.height),
+        combinedImageData = ctx.getImageData(0, 0, combinedImage.width, combinedImage.height),
+        colorPixels = imageData.data,
+        pixels = combinedImageData.data;
 
+  // For Each Pixel, does work to create uncombined images and final image
   for (let i = 0; i < pixels.length; i += 4) {
     let bWPixel = (colorPixels[i]+colorPixels[i+1]+colorPixels[i+2])/3;
     switch(color) {
@@ -121,11 +182,13 @@ function captureImage(color) {
 
   }
 
+  // Draws Images
   ctx.putImageData(combinedImageData, 0, 0);
   colorCtx.putImageData(imageData, 0, 0);
 
 }
 
+// Function for downloading final image
 function downloadImage() {
 
   const data = combinedImage.toDataURL("image/jpeg"),
