@@ -59,7 +59,9 @@ function toggleCamera() {
         webcam.srcObject = stream;
         webcam.addEventListener("loadedmetadata", () => {
           setZoom();
-          captureImage(null);
+          if (previousWidth != webcam.videoWidth) {
+            captureImage(null);
+          }
         });
       })
       .catch(function (err0r) {
@@ -99,8 +101,8 @@ function vColorFilter() {
 // Produces Uncombined Images and Final Image
 function captureImage(color) {
 
-  // If the canvas is blank or if Camera resolution changes, then initializes certain things
-  if (blank && (previousWidth != webcam.videoWidth)) {
+  // If the canvas is blank, then initializes certain things
+  if (blank) {
     combinedImage.width = webcam.videoWidth;
     combinedImage.height = webcam.videoHeight;
 
