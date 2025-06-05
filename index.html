@@ -27,12 +27,14 @@
   <button id="options" onclick="vColorFilter()">Toggle Off vColor Filter</button>
   <div class="example">
     <h1>RGB Camera Example</h1>
-    <span class="webcamContainer">
-      <video autoplay="true" id="webcam"></video>
+    <div id="webcamContainer">
+      <video autoplay="true" id="webcam" disablePictureInPicture></video>
       <button onclick="toggleCamera()" id="toggleCameraButton">&#10227;</button>
-    </span>
+    </div>
 
-    <div>
+    <div class="controls">
+      <input type="range" min="1" max="5" value="1" step=".01" oninput="setZoom()" id="zoomSlider">
+      <br>
       <button onclick="captureImage('red')">Red Capture</button>
       <button onclick="captureImage('green')">Green Capture</button>
       <button onclick="captureImage('blue')">Blue Capture</button>
@@ -42,15 +44,15 @@
     <div class="imageContainer">
       <span class="imageGroup">
         <h3>Red Image:</h3>
-        <canvas id="redImage"></canvas>
+        <canvas id="redImage" class="uncombinedImage"></canvas>
       </span>
       <span class="imageGroup">
         <h3>Green Image:</h3>
-        <canvas id="greenImage"></canvas>
+        <canvas id="greenImage" class="uncombinedImage"></canvas>
       </span>
       <span class="imageGroup">
         <h3>Blue Image:</h3>
-        <canvas id="blueImage"></canvas>
+        <canvas id="blueImage" class="uncombinedImage"></canvas>
       </span>
     </div>
 
